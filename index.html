@@ -12,7 +12,7 @@ body {
     overflow: hidden;
 }
 
-/* 화면 흔들림 */
+/* 화면 미세 흔들림 */
 @keyframes shake {
     0% { transform: translate(0,0); }
     25% { transform: translate(1px,-1px); }
@@ -21,10 +21,10 @@ body {
     100% { transform: translate(0,0); }
 }
 body.active {
-    animation: shake 0.1s infinite;
+    animation: shake 0.08s infinite;
 }
 
-/* 중앙 컨테이너 */
+/* 중앙 */
 .container {
     position: absolute;
     top: 50%;
@@ -35,8 +35,8 @@ body.active {
 
 h1 {
     font-size: 42px;
-    text-shadow: 0 0 20px red;
-    letter-spacing: 3px;
+    text-shadow: 0 0 25px red;
+    letter-spacing: 4px;
 }
 
 button {
@@ -59,8 +59,8 @@ button:active {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 150px;
-    background: rgba(0,0,0,0.8);
+    height: 180px;
+    background: rgba(0,0,0,0.85);
     overflow: hidden;
     font-size: 14px;
     padding: 10px;
@@ -78,7 +78,7 @@ button:active {
     pointer-events: none;
 }
 
-/* 떠다니는 외국어 */
+/* 외국어 떠다님 */
 .floating {
     position: absolute;
     font-size: 12px;
@@ -109,39 +109,38 @@ function activate() {
 
     const flash = document.getElementById("flash");
     flash.style.opacity = "1";
-    setTimeout(() => flash.style.opacity = "0", 100);
+    setTimeout(() => flash.style.opacity = "0", 80);
 
-    fakeIP();
+    generateFakeIP();
     spamLanguages();
     startLogs();
 }
 
-function fakeIP() {
+function generateFakeIP() {
     let ip = Math.floor(Math.random()*255)+"."+
              Math.floor(Math.random()*255)+"."+
              Math.floor(Math.random()*255)+"."+
              Math.floor(Math.random()*255);
-
-    addLog("외부 접속 감지...");
-    addLog("IP 추적 시작: "+ip);
+    addLog("접속 추적 시작...");
+    addLog("대상 IP: " + ip);
 }
 
 function startLogs() {
     const messages = [
-        "데이터 무결성 검사 중...",
-        "암호화 키 분석 중...",
-        "비인가 접근 경로 차단 시도...",
-        "root 권한 상승 탐지...",
-        "패킷 스니핑 활성화...",
-        "트래픽 리디렉션 감지..."
+        "시스템 접근 권한 상승 감지...",
+        "루트 디렉토리 검사 중...",
+        "보안 키 우회 시도 확인...",
+        "비인가 프로세스 실행 중...",
+        "패킷 분석 진행 중...",
+        "데이터 스택 접근 중..."
     ];
 
-    let i = 0;
+    let count = 0;
     let interval = setInterval(()=>{
         addLog(messages[Math.floor(Math.random()*messages.length)]);
-        i++;
-        if(i>15) clearInterval(interval);
-    }, 400);
+        count++;
+        if(count > 18) clearInterval(interval);
+    }, 300);
 }
 
 function addLog(text){
@@ -157,10 +156,11 @@ function spamLanguages(){
         "アクセス拒否",
         "система заражена",
         "数据异常",
-        "système inconnu"
+        "système inconnu",
+        "Διαρροή δεδομένων"
     ];
 
-    for(let i=0;i<20;i++){
+    for(let i=0;i<25;i++){
         let span = document.createElement("div");
         span.className = "floating";
         span.innerText = words[Math.floor(Math.random()*words.length)];
