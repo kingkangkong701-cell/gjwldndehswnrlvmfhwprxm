@@ -1,171 +1,135 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>허지웅 돈받기 프로젝트</title>
+<title>SECURE ACCESS NODE</title>
 <style>
-body {
-    margin: 0;
-    background: black;
-    color: #ff0000;
-    font-family: monospace;
-    overflow: hidden;
+body{
+    margin:0;
+    background:black;
+    color:#00ff00;
+    font-family:monospace;
+    overflow:hidden;
 }
 
-/* 화면 미세 흔들림 */
-@keyframes shake {
-    0% { transform: translate(0,0); }
-    25% { transform: translate(1px,-1px); }
-    50% { transform: translate(-1px,1px); }
-    75% { transform: translate(1px,1px); }
-    100% { transform: translate(0,0); }
-}
-body.active {
-    animation: shake 0.08s infinite;
+/* 글리치 효과 */
+@keyframes glitch{
+    0%{text-shadow:2px 0 red;}
+    25%{text-shadow:-2px 0 blue;}
+    50%{text-shadow:2px 0 red;}
+    75%{text-shadow:-2px 0 blue;}
+    100%{text-shadow:0 0 5px #00ff00;}
 }
 
-/* 중앙 */
-.container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+.container{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
 }
 
-h1 {
-    font-size: 42px;
-    text-shadow: 0 0 25px red;
-    letter-spacing: 4px;
+h1{
+    font-size:40px;
+    animation:glitch 0.2s infinite;
 }
 
-button {
-    margin-top: 40px;
-    padding: 15px 40px;
-    font-size: 18px;
-    background: black;
-    color: red;
-    border: 2px solid red;
-    cursor: pointer;
+button{
+    padding:15px 40px;
+    margin-top:40px;
+    font-size:18px;
+    background:black;
+    color:#00ff00;
+    border:2px solid #00ff00;
+    cursor:pointer;
 }
 
-button:active {
-    transform: scale(0.95);
+#popup{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:black;
+    border:2px solid red;
+    padding:30px;
+    width:400px;
+    display:none;
+    color:red;
+    box-shadow:0 0 20px red;
+    z-index:10;
 }
 
-/* 로그창 */
-#log {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 180px;
-    background: rgba(0,0,0,0.85);
-    overflow: hidden;
-    font-size: 14px;
-    padding: 10px;
+#popup h2{
+    margin-top:0;
 }
 
-/* 섬광 */
-.flash {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: white;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* 외국어 떠다님 */
-.floating {
-    position: absolute;
-    font-size: 12px;
-    opacity: 0.6;
-    animation: rise 6s linear infinite;
-}
-
-@keyframes rise {
-    from { transform: translateY(100vh); }
-    to { transform: translateY(-10vh); }
+#overlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    z-index:5;
 }
 </style>
 </head>
 <body>
 
-<div class="flash" id="flash"></div>
-
 <div class="container">
-    <h1>허지웅 돈받기 프로젝트</h1>
-    <button onclick="activate()">돈 받기</button>
+    <h1>HUR JIWOONG PAYMENT NODE</h1>
+    <button onclick="activate()">INITIATE TRANSFER</button>
 </div>
 
-<div id="log"></div>
+<div id="overlay"></div>
+
+<div id="popup">
+    <h2>⚠ SECURITY BREACH DETECTED ⚠</h2>
+    IP ADDRESS FLAGGED<br><br>
+    Unauthorized access to encrypted node<br>
+    Root privilege escalation attempt logged<br><br>
+    Tracking session...<br>
+    Uploading device fingerprint...<br><br>
+    <button onclick="activate()">CLOSE</button>
+</div>
 
 <script>
-function activate() {
-    document.body.classList.add("active");
-
-    const flash = document.getElementById("flash");
-    flash.style.opacity = "1";
-    setTimeout(() => flash.style.opacity = "0", 80);
-
-    generateFakeIP();
-    spamLanguages();
-    startLogs();
+function randomIP(){
+    return Math.floor(Math.random()*255)+"."+
+           Math.floor(Math.random()*255)+"."+
+           Math.floor(Math.random()*255)+"."+
+           Math.floor(Math.random()*255);
 }
 
-function generateFakeIP() {
-    let ip = Math.floor(Math.random()*255)+"."+
-             Math.floor(Math.random()*255)+"."+
-             Math.floor(Math.random()*255)+"."+
-             Math.floor(Math.random()*255);
-    addLog("접속 추적 시작...");
-    addLog("대상 IP: " + ip);
-}
+function activate(){
+    document.getElementById("overlay").style.display="block";
+    document.getElementById("popup").style.display="block";
 
-function startLogs() {
-    const messages = [
-        "시스템 접근 권한 상승 감지...",
-        "루트 디렉토리 검사 중...",
-        "보안 키 우회 시도 확인...",
-        "비인가 프로세스 실행 중...",
-        "패킷 분석 진행 중...",
-        "데이터 스택 접근 중..."
-    ];
+    let ipLine = document.createElement("div");
+    ipLine.innerHTML="<br>SESSION IP: "+randomIP();
+    document.getElementById("popup").appendChild(ipLine);
 
-    let count = 0;
-    let interval = setInterval(()=>{
-        addLog(messages[Math.floor(Math.random()*messages.length)]);
-        count++;
-        if(count > 18) clearInterval(interval);
-    }, 300);
-}
+    // 화면 깜빡임
+    document.body.style.background="darkred";
+    setTimeout(()=>{document.body.style.background="black";},100);
 
-function addLog(text){
-    const log = document.getElementById("log");
-    log.innerHTML += text + "<br>";
-    log.scrollTop = log.scrollHeight;
-}
-
-function spamLanguages(){
-    const words = [
-        "تم اختراق النظام",
-        "sécurité compromise",
-        "アクセス拒否",
+    // 외국어 랜덤 텍스트 뿌리기
+    let words=[
+        "SYSTEM COMPROMISED",
+        "ENCRYPTION FAILURE",
+        "Διαρροή δεδομένων",
         "система заражена",
-        "数据异常",
-        "système inconnu",
-        "Διαρροή δεδομένων"
+        "تم اختراق النظام",
+        "アクセス拒否"
     ];
 
-    for(let i=0;i<25;i++){
-        let span = document.createElement("div");
-        span.className = "floating";
-        span.innerText = words[Math.floor(Math.random()*words.length)];
-        span.style.left = Math.random()*100+"vw";
-        span.style.animationDuration = (3+Math.random()*5)+"s";
+    for(let i=0;i<20;i++){
+        let span=document.createElement("div");
+        span.style.position="absolute";
+        span.style.left=Math.random()*100+"vw";
+        span.style.top=Math.random()*100+"vh";
+        span.style.fontSize="12px";
+        span.style.color="#00ff00";
+        span.innerText=words[Math.floor(Math.random()*words.length)];
         document.body.appendChild(span);
     }
 }
