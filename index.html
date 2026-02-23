@@ -7,41 +7,41 @@
 body {
     margin: 0;
     background: black;
-    overflow: hidden;
+    color: #ff0000;
     font-family: monospace;
-    color: red;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
 }
 
-/* 배경 번쩍 효과 */
-.flash {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: white;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
+/* 화면 흔들림 */
+@keyframes shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(1px,-1px); }
+    50% { transform: translate(-1px,1px); }
+    75% { transform: translate(1px,1px); }
+    100% { transform: translate(0,0); }
+}
+body.active {
+    animation: shake 0.1s infinite;
 }
 
-/* 중앙 박스 */
+/* 중앙 컨테이너 */
 .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-    z-index: 2;
 }
 
 h1 {
-    font-size: 40px;
-    text-shadow: 0 0 15px red;
+    font-size: 42px;
+    text-shadow: 0 0 20px red;
+    letter-spacing: 3px;
 }
 
 button {
+    margin-top: 40px;
     padding: 15px 40px;
-    margin-top: 30px;
     font-size: 18px;
     background: black;
     color: red;
@@ -53,28 +53,40 @@ button:active {
     transform: scale(0.95);
 }
 
-/* 가짜 팝업 */
-.popup {
-    position: fixed;
-    background: #111;
-    border: 2px solid red;
-    padding: 30px;
-    color: red;
-    font-size: 18px;
-    display: none;
-    z-index: 5;
-    box-shadow: 0 0 20px red;
-}
-
-/* 떠다니는 텍스트 */
-.floating-text {
+/* 로그창 */
+#log {
     position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background: rgba(0,0,0,0.8);
+    overflow: hidden;
     font-size: 14px;
-    opacity: 0.7;
-    animation: float 5s linear infinite;
+    padding: 10px;
 }
 
-@keyframes float {
+/* 섬광 */
+.flash {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: white;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 떠다니는 외국어 */
+.floating {
+    position: absolute;
+    font-size: 12px;
+    opacity: 0.6;
+    animation: rise 6s linear infinite;
+}
+
+@keyframes rise {
     from { transform: translateY(100vh); }
     to { transform: translateY(-10vh); }
 }
@@ -86,45 +98,74 @@ button:active {
 
 <div class="container">
     <h1>허지웅 돈받기 프로젝트</h1>
-    <button onclick="scare()">돈 받기</button>
+    <button onclick="activate()">돈 받기</button>
 </div>
 
-<div class="popup" id="popup">
-    ⚠ 경고 ⚠ <br><br>
-    당신의 기기가 위험 상태입니다.<br>
-    시스템 무결성 확인 중...<br><br>
-    (아무 일도 안 일어남)
-</div>
+<div id="log"></div>
 
 <script>
-function scare() {
-    // 번쩍 효과
+function activate() {
+    document.body.classList.add("active");
+
     const flash = document.getElementById("flash");
     flash.style.opacity = "1";
-    setTimeout(() => flash.style.opacity = "0", 150);
+    setTimeout(() => flash.style.opacity = "0", 100);
 
-    // 팝업 표시
-    const popup = document.getElementById("popup");
-    popup.style.display = "block";
-    popup.style.top = Math.random()*50 + 20 + "%";
-    popup.style.left = Math.random()*50 + 20 + "%";
+    fakeIP();
+    spamLanguages();
+    startLogs();
+}
 
-    // 이상한 외국어 생성
+function fakeIP() {
+    let ip = Math.floor(Math.random()*255)+"."+
+             Math.floor(Math.random()*255)+"."+
+             Math.floor(Math.random()*255)+"."+
+             Math.floor(Math.random()*255);
+
+    addLog("외부 접속 감지...");
+    addLog("IP 추적 시작: "+ip);
+}
+
+function startLogs() {
+    const messages = [
+        "데이터 무결성 검사 중...",
+        "암호화 키 분석 중...",
+        "비인가 접근 경로 차단 시도...",
+        "root 권한 상승 탐지...",
+        "패킷 스니핑 활성화...",
+        "트래픽 리디렉션 감지..."
+    ];
+
+    let i = 0;
+    let interval = setInterval(()=>{
+        addLog(messages[Math.floor(Math.random()*messages.length)]);
+        i++;
+        if(i>15) clearInterval(interval);
+    }, 400);
+}
+
+function addLog(text){
+    const log = document.getElementById("log");
+    log.innerHTML += text + "<br>";
+    log.scrollTop = log.scrollHeight;
+}
+
+function spamLanguages(){
     const words = [
         "تم اختراق النظام",
         "sécurité compromise",
         "アクセス拒否",
         "система заражена",
-        "système inconnu",
-        "بيانات غير معروفة"
+        "数据异常",
+        "système inconnu"
     ];
 
-    for(let i=0; i<10; i++){
+    for(let i=0;i<20;i++){
         let span = document.createElement("div");
-        span.className = "floating-text";
+        span.className = "floating";
         span.innerText = words[Math.floor(Math.random()*words.length)];
-        span.style.left = Math.random()*100 + "vw";
-        span.style.animationDuration = (3 + Math.random()*5) + "s";
+        span.style.left = Math.random()*100+"vw";
+        span.style.animationDuration = (3+Math.random()*5)+"s";
         document.body.appendChild(span);
     }
 }
