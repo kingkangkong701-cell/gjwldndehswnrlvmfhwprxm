@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>허지웅 돈받기 프로젝트</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at center, #8b0000 0%, #300000 40%, #000000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    color: #ff0000;
+    overflow: hidden;
+}
+
+/* 배경에 이상한 느낌 주기 */
+body::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255,0,0,0.05),
+        rgba(255,0,0,0.05) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    animation: move 5s linear infinite;
+}
+
+@keyframes move {
+    from { transform: translate(-10%, -10%); }
+    to { transform: translate(10%, 10%); }
+}
+
+.container {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 40px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px red;
+}
+
+button {
+    margin-top: 40px;
+    padding: 15px 40px;
+    font-size: 18px;
+    background-color: black;
+    color: red;
+    border: 2px solid red;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.95);
+    background-color: #220000;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>허지웅 돈받기 프로젝트</h1>
+    <button>돈 받기</button>
+</div>
+</body>
+</html>
